@@ -17,22 +17,18 @@ class Aes
     puts "\nEncryption: -----------------------------------------------------------------------------------------------"
     puts "Plain Text: #{plain_text}"
     blocks = break_into_blocks(plain_text)
-    # puts blocks.inspect
-    # convert_block_into_words(blocks.first)
+
     blocks = blocks.collect { |block| convert_block_into_words(block) }
     puts "Plain Text hex blocks: #{blocks.inspect}\n\n"
 
     output_cipher_blocks = []
-    blocks.each_with_index do |block, index|
-      # puts "Block #{index + 1}------------------"
-      # puts "Input Block: #{block}"
-
+    blocks.each do |block|
       # First add round key before rounds
       key_words = @key_words[0..3]
       add_round_key_output = add_round_key(block, key_words)
 
+      # Pass the block over 10 rounds
       cipher_block = encrypt_rounds(add_round_key_output, 1)
-      # puts "Cipher Block: #{cipher_block.inspect}"
 
       output_cipher_blocks << cipher_block
     end
@@ -48,11 +44,9 @@ class Aes
   def encrypt_rounds(input_block, round)
     # Substitute Bytes step
     round_substitute_output = input_block.collect { |word| substitute_bytes(word) }
-    # puts round_substitute_output.inspect
 
     # Shift rows step
     round_shift_rows_output = shift_rows(round_substitute_output)
-    # puts round_shift_rows_output.inspect
 
     if round < 10
       # Mix Columns step
@@ -65,7 +59,6 @@ class Aes
     # Add round key step
     key_words = @key_words[(round*4)..(round*4+3)]
     round_add_round_key_output = add_round_key(output_block, key_words)
-    # puts round_add_round_key_output.inspect
 
     if round == 10
       return round_add_round_key_output
@@ -86,9 +79,7 @@ class Aes
 
   def convert_block_into_words(block)
     hex_array = string_to_hex_array(block)
-    # puts hex_array.inspect
     hex_block = hex_array.each_slice(4).to_a
-    # puts hex_block.inspect
     return hex_block
   end
 
@@ -110,16 +101,13 @@ class Aes
 
     output_plain_text_blocks = []
 
-    blocks.each_with_index do |block, index|
-      # puts "Block #{index + 1}------------------"
-      # puts "Input Block: #{block}"
-
+    blocks.each do |block|
       # First add round key before rounds
       key_words = @key_words[40..43]
       add_round_key_output = add_round_key(block, key_words)
 
+      # Pass the block over 10 rounds
       plain_text_block = decrypt_rounds(add_round_key_output, 1)
-      # puts "Plain Text Block: #{plain_text_block.inspect}"
 
       output_plain_text_blocks << plain_text_block
     end
@@ -136,23 +124,19 @@ class Aes
     hex_array = cipher_text.split('0x').drop(1)
     blocks = hex_array.each_slice(16).to_a
     blocks = blocks.collect { |block| block.each_slice(4).to_a }
-    # puts blocks.inspect
     return blocks
   end
 
   def decrypt_rounds(input_block, round)
     # Inverse Shift rows step
     round_shift_rows_output = shift_rows(input_block, reverse: true)
-    # puts round_shift_rows_output.inspect
 
     # Inverse Substitute Bytes step
     round_substitute_output = round_shift_rows_output.collect { |word| substitute_bytes(word, reverse: true) }
-    # puts round_substitute_output.inspect
 
     # Add round key step
     key_words = @key_words[((10-round)*4)..((10-round)*4+3)]
     round_add_round_key_output = add_round_key(round_substitute_output, key_words)
-    # puts round_add_round_key_output.inspect
 
     if round < 10
       # Inverse Mix Columns step
@@ -286,8 +270,7 @@ class Aes
   def gf2_multiply_by_02(hex_byte)
     binary = hex_to_binary(hex_byte)
     left_most_bit = binary[0]
-    binary[0] = ''
-    binary += '0'
+    binary[0] = ''; binary += '0' # Left shift 1 bit
     output = binary_to_hex(binary)
     output = hex_byte_xor(output, '1B') if left_most_bit == '1'
     return output
@@ -321,8 +304,8 @@ class Aes
 
   def r_con_hex_word(index)
     rc = R_CON_HEX[index-1]
-    rcon = [rc, '00', '00', '00']
-    return rcon
+    r_con = [rc, '00', '00', '00']
+    return r_con
   end
 
   # --------------------------------------------------------------------------------------------------------------------
