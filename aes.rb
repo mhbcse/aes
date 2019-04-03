@@ -231,43 +231,43 @@ class Aes
     if a == '01'
       return b
     elsif a == '02'
-      output = gf2_multiply_by_02(b) # x2 -> 2
+      output = gf_multiply_by_02(b) # x2 -> 2
       return output
     elsif a == '03'
-      output = gf2_multiply_by_02(b) # x2 -> 2
+      output = gf_multiply_by_02(b) # x2 -> 2
       output = hex_byte_xor(output, b) # +b -> 3
       return output
     elsif a == '09'
-      output = gf2_multiply_by_02(b) # x2 -> 2
-      output = gf2_multiply_by_02(output) # x2 -> 4
-      output = gf2_multiply_by_02(output) # x2 -> 8
+      output = gf_multiply_by_02(b) # x2 -> 2
+      output = gf_multiply_by_02(output) # x2 -> 4
+      output = gf_multiply_by_02(output) # x2 -> 8
       output = hex_byte_xor(output, b) # +b -> 9
       return output
     elsif a == '0B' # 11
-      output = gf2_multiply_by_02(b) # x2 -> 2
-      output = gf2_multiply_by_02(output) # x2 -> 4
+      output = gf_multiply_by_02(b) # x2 -> 2
+      output = gf_multiply_by_02(output) # x2 -> 4
       output = hex_byte_xor(output, b) # +b -> 5
-      output = gf2_multiply_by_02(output) # x2 -> 10
+      output = gf_multiply_by_02(output) # x2 -> 10
       output = hex_byte_xor(output, b) # +b -> 11
       return output
     elsif a == '0D' # 13
-      output = gf2_multiply_by_02(b) # x2 -> 2
+      output = gf_multiply_by_02(b) # x2 -> 2
       output = hex_byte_xor(output, b) # +b -> 3
-      output = gf2_multiply_by_02(output) # x2 -> 6
-      output = gf2_multiply_by_02(output) # x2 -> 12
+      output = gf_multiply_by_02(output) # x2 -> 6
+      output = gf_multiply_by_02(output) # x2 -> 12
       output = hex_byte_xor(output, b) # +b -> 13
       return output
     elsif a == '0E' # 14
-      output = gf2_multiply_by_02(b) # x2 -> 2
+      output = gf_multiply_by_02(b) # x2 -> 2
       output = hex_byte_xor(output, b) # +b -> 3
-      output = gf2_multiply_by_02(output) # x2 -> 6
+      output = gf_multiply_by_02(output) # x2 -> 6
       output = hex_byte_xor(output, b) # +b -> 7
-      output = gf2_multiply_by_02(output) # x2 -> 14
+      output = gf_multiply_by_02(output) # x2 -> 14
       return output
     end
   end
 
-  def gf2_multiply_by_02(hex_byte)
+  def gf_multiply_by_02(hex_byte)
     binary = hex_to_binary(hex_byte)
     left_most_bit = binary[0]
     binary[0] = ''; binary += '0' # Left shift 1 bit
