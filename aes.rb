@@ -14,7 +14,7 @@ class Aes
   # --------------------------------------------------------------------------------------------------------------------
 
   def encrypt(plain_text)
-    puts "\nEncryption: ------------------------------"
+    puts "\nEncryption: -----------------------------------------------------------------------------------------------"
     puts "Plain Text: #{plain_text}"
     blocks = break_into_blocks(plain_text)
     # puts blocks.inspect
@@ -103,7 +103,7 @@ class Aes
   # --------------------------------------------------------------------------------------------------------------------
 
   def decrypt(cipher_text)
-    puts "\nDecryption: ------------------------------"
+    puts "\nDecryption: -----------------------------------------------------------------------------------------------"
     puts "Cipher Text: #{cipher_text}"
     blocks = break_cipher_texts_to_block(cipher_text)
     puts "Cipher Hex blocks: #{blocks.inspect}\n\n"
